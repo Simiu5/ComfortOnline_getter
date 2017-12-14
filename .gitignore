@@ -97,3 +97,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+login_data
+startGetComfortOnline.bat
+urls
