@@ -115,6 +115,7 @@ HZ_Samstag				= tree.get_element_by_id("WeekdayId").xpath("//*[@value='6']/@data
 
 # Print data (Debug)
 print(HZ_Dienstag)
+print(HZ_Mittwoch)
 
 #input()
 
