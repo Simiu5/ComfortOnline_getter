@@ -178,10 +178,6 @@ nameList.append("SA_Ueberfuellschutz")
 SA_Ueberfuellschutz	= tree.get_element_by_id("val_000_00660").text
 valList.append(SA_Ueberfuellschutz)
 
-nameList.append("SA_TemperaturAntrieb")
-SA_TemperaturAntrieb = tree.get_element_by_id("val_000_00947").text
-valList.append(SA_TemperaturAntrieb)
-
 nameList.append("SA_HaendischFuellen [0=Aus|1=Ein]")
 SA_HaendischFuellen = tree.xpath("//*[@id='switch_000_00640']/@data-cop-oldvaluetext")[0]
 valList.append(SA_HaendischFuellen)
@@ -708,7 +704,7 @@ valList.append(AG_Zeitabstand)
 for x,y in zip(nameList,valList):
     print(x,"-->",y)
 
-#input()
+input()
 
 
 
