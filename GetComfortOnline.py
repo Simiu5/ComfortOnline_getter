@@ -4,11 +4,13 @@
 import requests
 from lxml import html
 
+
 # Get login data from an external file
 f = open("login_data","r")
 USERNAME = f.readline().strip()
 PASSWORD = f.readline().strip()
 f.close()
+
 
 # Get url´s from an external file
 f = open("urls","r")
@@ -30,17 +32,21 @@ URL_ALARMEAKTIV = f.readline().strip()
 URL_ALARMEALLE = f.readline().strip()
 f.close()
 
+
 # Init lists
 nameList = list()
 valList = list()
 
+
 # Init session
 session_requests = requests.session()
+
 
 # Get login token
 result = session_requests.get(URL_LOGIN)
 tree = html.fromstring(result.text)
 authenticity_token = list(set(tree.xpath("//input[@name='__RequestVerificationToken']/@value")))
+
 
 # Create payload
 payload = {
@@ -48,6 +54,7 @@ payload = {
 	"Password": PASSWORD,
 	"__RequestVerificationToken": authenticity_token
 }
+
 
 # Perform login
 result = session_requests.post(URL_LOGIN, data = payload, headers = dict(referer = URL_LOGIN))
