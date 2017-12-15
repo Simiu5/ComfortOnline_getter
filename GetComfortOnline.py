@@ -25,6 +25,7 @@ URL_BRAUCHWASSER = f.readline().strip()
 URL_BRAUCHZEITEN = f.readline().strip()
 URL_PUFFER = f.readline().strip()
 URL_PUFFERZEITEN = f.readline().strip()
+URL_ZUBRINGERPUMPE = f.readline().strip()
 URL_ZIRKULATION = f.readline().strip()
 URL_ZIRKZEITEN = f.readline().strip()
 URL_ALLGEMEIN = f.readline().strip()
@@ -64,13 +65,16 @@ result = session_requests.post(URL_LOGIN, data = payload, headers = dict(referer
 result = session_requests.get(URL_UEBERSICHT, headers = dict(referer = URL_UEBERSICHT))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
+nameList.append("UE_Name")
+valList.append("Uebersicht")
+
 nameList.append("UE_KE_TempIst [°C]")
 UE_KE_TempIst = tree.get_element_by_id("val_000_00589").text
 valList.append(UE_KE_TempIst)
 
-nameList.append("UE_KE_RueckLaufTempIst [°C]")
-UE_KE_RueckLaufTempIst = tree.get_element_by_id("val_000_00590").text 
-valList.append(UE_KE_RueckLaufTempIst)
+nameList.append("UE_KE_RuecklaufTempIst [°C]")
+UE_KE_RuecklaufTempIst = tree.get_element_by_id("val_000_00590").text 
+valList.append(UE_KE_RuecklaufTempIst)
 
 nameList.append("UE_HK_RaumTempIst [°C]")
 UE_HK_RaumTempIst = tree.get_element_by_id("val_002_00335").text
@@ -96,6 +100,9 @@ valList.append(UE_PU_TempUnten)
 # Kessel-Elemente KE_
 result = session_requests.get(URL_KESSEL, headers = dict(referer = URL_KESSEL))
 tree = html.fromstring(result.content.decode('UTF-8'))
+
+nameList.append("KE_Name")
+valList.append("Kessel")
 
 nameList.append("KE_KesselEinAus [0=Aus|1=Ein]")
 KE_KesselEinAus	= tree.xpath("//*[@id='switch_000_00001']/@data-cop-oldvaluetext")[0]
@@ -137,9 +144,9 @@ nameList.append("KE_Nennleistung [kW]")
 KE_Nennleistung = tree.get_element_by_id("val_000_00019").text
 valList.append(KE_Nennleistung)
 
-nameList.append("KE_StatusRLA")
-KE_StatusRLA = tree.get_element_by_id("val_000_00622").text
-valList.append(KE_StatusRLA)
+nameList.append("KE_RLAMischer")
+KE_RLAMischer = tree.get_element_by_id("val_000_00622").text
+valList.append(KE_RLAMischer)
 
 nameList.append("KE_Foedersystem")
 KE_Foedersystem = tree.get_element_by_id("val_000_00914").text
@@ -154,13 +161,16 @@ valList.append(KE_AussenTemp)
 result = session_requests.get(URL_SAUGANLAGE, headers = dict(referer = URL_SAUGANLAGE))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
-nameList.append("SA_BeforzugtZeit1 [0=Aus|1=Ein]")
-SA_BeforzugtZeit1 = tree.xpath("//*[@id='switch_000_00045']/@data-cop-oldvaluetext")[0]
-valList.append(SA_BeforzugtZeit1)
+nameList.append("SA_Name")
+valList.append("Sauganlage")
 
-nameList.append("SA_BeforzugtZeit2 [0=Aus|1=Ein]")
-SA_BeforzugtZeit2 = tree.xpath("//*[@id='switch_000_00046']/@data-cop-oldvaluetext")[0]
-valList.append(SA_BeforzugtZeit2)
+nameList.append("SA_BeforzugteZeit1 [0=Aus|1=Ein]")
+SA_BeforzugteZeit1 = tree.xpath("//*[@id='switch_000_00045']/@data-cop-oldvaluetext")[0]
+valList.append(SA_BeforzugteZeit1)
+
+nameList.append("SA_BeforzugteZeit2 [0=Aus|1=Ein]")
+SA_BeforzugteZeit2 = tree.xpath("//*[@id='switch_000_00046']/@data-cop-oldvaluetext")[0]
+valList.append(SA_BeforzugteZeit2)
 
 nameList.append("SA_TUBBrennstoff")
 SA_TUBBrennstoff = tree.get_element_by_id("val_000_00605").text
@@ -174,9 +184,9 @@ nameList.append("SA_Status")
 SA_Status = tree.get_element_by_id("val_000_00079").text
 valList.append(SA_Status)
 
-nameList.append("SA_Ueberfuellschutz")
-SA_Ueberfuellschutz	= tree.get_element_by_id("val_000_00660").text
-valList.append(SA_Ueberfuellschutz)
+nameList.append("SA_Fuellstand")
+SA_Fuellstand	= tree.get_element_by_id("val_000_00660").text
+valList.append(SA_Fuellstand)
 
 nameList.append("SA_HaendischFuellen [0=Aus|1=Ein]")
 SA_HaendischFuellen = tree.xpath("//*[@id='switch_000_00640']/@data-cop-oldvaluetext")[0]
@@ -207,6 +217,10 @@ valList.append(SA_HaendischFuellen)
 # Heizkreis-Elemente HK_
 result = session_requests.get(URL_HEIZKREIS, headers = dict(referer = URL_HEIZKREIS))
 tree = html.fromstring(result.content.decode('UTF-8'))
+
+nameList.append("HK_Name")
+HK_Name = tree.get_element_by_id("val_002_00337").text
+valList.append(HK_Name)
 
 nameList.append("HK_Status")
 HK_Status = tree.get_element_by_id("val_002_00346").text
@@ -350,6 +364,10 @@ valList.append(HK_Ecobetrieb)
 result = session_requests.get(URL_BRAUCHWASSER, headers = dict(referer = URL_BRAUCHWASSER))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
+nameList.append("BW_Name")
+BW_Name = tree.get_element_by_id("val_001_00488").text
+valList.append(BW_Name)
+
 nameList.append("BW_Status")
 BW_Status = tree.get_element_by_id("val_001_00513").text
 valList.append(BW_Status)
@@ -456,6 +474,10 @@ valList.append(BW_LegioSchutzTemp)
 result = session_requests.get(URL_PUFFER, headers = dict(referer = URL_PUFFER))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
+nameList.append("PU_Name")
+PU_Name = tree.get_element_by_id("val_000_00447").text
+valList.append(PU_Name)
+
 nameList.append("PU_Status")
 PU_Status = tree.get_element_by_id("val_000_00483").text
 valList.append(PU_Status)
@@ -508,6 +530,10 @@ nameList.append("PU_Programm")
 PU_Programm = tree.xpath("//*[@selected='selected']")[0].text
 valList.append(PU_Programm)
 
+nameList.append("PU_Typ")
+PU_Typ = tree.get_element_by_id("val_000_00473").text
+valList.append(PU_Typ)
+
 nameList.append("PU_LegioSchutzWochentag [0=Sonntag|1=Montag|2=Dienstag|3=Mittwoch|4=Donnerstag|5=Freitag|6=Samstag|7=Aus]")
 PU_LegioSchutzWochentag = tree.xpath("//*[@id='switch_000_00480']/@data-cop-oldvaluetext")[0]
 valList.append(PU_LegioSchutzWochentag)
@@ -558,9 +584,33 @@ valList.append(PU_LegioSchutzTemp)
 # valList.append(PZ_Samstag)
 
 
+# Zubringerpumpe-Elemente ZU_
+result = session_requests.get(URL_ZUBRINGERPUMPE, headers = dict(referer = URL_ZUBRINGERPUMPE))
+tree = html.fromstring(result.content.decode('UTF-8'))
+
+nameList.append("ZU_Name")
+ZU_Name = tree.get_element_by_id("val_001_01133").text
+valList.append(ZU_Name)
+
+nameList.append("ZU_TempSoll")
+ZU_TempSoll = tree.get_element_by_id("val_001_01135").text
+valList.append(ZU_TempSoll)
+
+nameList.append("ZU_Anforderung")
+ZU_Anforderung = tree.get_element_by_id("val_001_01134").text
+valList.append(ZU_Anforderung)
+
+nameList.append("ZU_Pumpe")
+ZU_Pumpe = tree.get_element_by_id("val_001_00450").text
+valList.append(ZU_Pumpe)
+
+
 # Zirkulation-Elemente ZI_
 result = session_requests.get(URL_ZIRKULATION, headers = dict(referer = URL_ZIRKULATION))
 tree = html.fromstring(result.content.decode('UTF-8'))
+
+nameList.append("ZI_Name")
+valList.append("Zirkulation")
 
 nameList.append("ZI_Pumpe")
 ZI_Pumpe = tree.get_element_by_id("val_001_00904").text
@@ -624,6 +674,9 @@ valList.append(ZI_Program)
 result = session_requests.get(URL_ALLGEMEIN, headers = dict(referer = URL_ALLGEMEIN))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
+nameList.append("AG_Name")
+valList.append("Allgemeines")
+
 nameList.append("AG_Kesselname")
 AG_Kesselname = tree.get_element_by_id("val_000_00391").text
 valList.append(AG_Kesselname)
@@ -681,14 +734,14 @@ AG_Zeitabstand = tree.get_element_by_id("slider_000_00435").value
 valList.append(AG_Zeitabstand)
 
 
-# # AlarmeAktiv-Elemente AL_Aktiv
-# result = session_requests.get(URL_ALARMEAKTIV, headers = dict(referer = URL_ALARMEAKTIV))
-# tree = html.fromstring(result.content.decode('UTF-8'))
+#AlarmeAktiv-Elemente AL_Aktiv
+result = session_requests.get(URL_ALARMEAKTIV, headers = dict(referer = URL_ALARMEAKTIV))
+tree = html.fromstring(result.content.decode('UTF-8'))
 
-# nameList.append("AL_AktivList")
-# try: AL_AktivList = tree.get_element_by_id("alarmList").text_content()
-# except: AL_AktivList = "Es sind keine Einträge vorhanden"
-# valList.append(AL_AktivList)
+nameList.append("AL_AktivList")
+try: AL_AktivList = tree.get_element_by_id("alarmList").text_content()
+except: AL_AktivList = "Es sind keine Einträge vorhanden"
+valList.append(AL_AktivList)
 
 
 # # AlarmeAlle-Elemente AL_Alle
@@ -702,9 +755,9 @@ valList.append(AG_Zeitabstand)
 
 # Print data (Debug)
 for x,y in zip(nameList,valList):
-    print(x,"-->",y)
+	print(x,"\n-->",y)
 
-input()
+# input()
 
 
 
