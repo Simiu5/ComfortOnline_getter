@@ -6,6 +6,12 @@ from lxml import html
 import socket
 
 
+# Connection to FHEM
+# fhem's telnet port
+host = 'localhost'
+port = 7072
+
+
 # Get login data from an external file
 f = open("login_data","r")
 USERNAME = f.readline().strip()
@@ -755,10 +761,37 @@ valList.append(AL_AktivList)
 
 
 # Print data (Debug)
-for x,y in zip(nameList,valList):
-	print(x,"\n-->",y)
+# for x,y in zip(nameList,valList):
+	# print(x,"\n-->",y)
 
-input()
+
+def netcat(hostname, port, content):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((hostname, port))
+    s.sendall(content)
+    s.shutdown(socket.SHUT_WR)
+    while 1:
+        data = s.recv(1024)
+        if data == "":
+            break
+    if data:
+        print "Received:", repr(data)
+    s.close()
+
+
+# empty netcat string
+s = "";
+
+
+# Write 2 FHEM
+s += 'setreading {0} UE_KE_TempIst {1}\n'.format("KWB_Uebersicht",UE_KE_TempIst)
+s += 'setreading {0} UE_KE_RuecklaufTempIst {1}\n'.format("KWB_Uebersicht",UE_KE_RuecklaufTempIst)
+s += 'setreading {0} UE_HK_RaumTempIst {1}\n'.format("KWB_Uebersicht",UE_HK_RaumTempIst)
+
+s += "quit"
+
+netcat(host, port, s)
+
 
 
 
