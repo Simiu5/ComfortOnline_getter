@@ -1,0 +1,8 @@
+# read dht22 values every 5mins and feed into fhem
+
+SHELL=/bin/sh
+
+# m h dom mon dow user	command
+*/2 *	* * *	root    python /opt/fhem/scripts/dht22.py
+*/2 *   * * *   root    python /opt/fhem/scripts/kwb2fhem.py
+

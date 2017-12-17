@@ -13,14 +13,14 @@ port = 7072
 
 
 # Get login data from an external file
-f = open("login_data","r")
+f = open("/opt/fhem/scripts/login_data","r")
 USERNAME = f.readline().strip()
 PASSWORD = f.readline().strip()
 f.close()
 
 
 # Get url´s from an external file
-f = open("urls","r")
+f = open("/opt/fhem/scripts/urls","r")
 URL_LOGIN = f.readline().strip()
 URL_UEBERSICHT = f.readline().strip()
 URL_KESSEL = f.readline().strip()
@@ -741,7 +741,7 @@ AG_Zeitabstand = tree.get_element_by_id("slider_000_00435").value
 valList.append(AG_Zeitabstand)
 
 
-#AlarmeAktiv-Elemente AL_Aktiv
+#AlarmeAktiv-Elemente
 result = session_requests.get(URL_ALARMEAKTIV, headers = dict(referer = URL_ALARMEAKTIV))
 tree = html.fromstring(result.content.decode('UTF-8'))
 
@@ -751,7 +751,7 @@ except: AL_AktivList = "Es sind keine Einträge vorhanden"
 valList.append(AL_AktivList)
 
 
-# # AlarmeAlle-Elemente AL_Alle
+# # AlarmeAlle-Elemente
 # result = session_requests.get(URL_ALARMEALLE, headers = dict(referer = URL_ALARMEALLE))
 # tree = html.fromstring(result.content.decode('UTF-8'))
 
@@ -783,14 +783,146 @@ def netcat(hostname, port, content):
 s = "";
 
 
-# Write 2 FHEM
-s += 'setreading {0} UE_KE_TempIst {1}\n'.format("KWB_Uebersicht",UE_KE_TempIst)
-s += 'setreading {0} UE_KE_RuecklaufTempIst {1}\n'.format("KWB_Uebersicht",UE_KE_RuecklaufTempIst)
-s += 'setreading {0} UE_HK_RaumTempIst {1}\n'.format("KWB_Uebersicht",UE_HK_RaumTempIst)
+# Send 2 fhem
+# Uebersicht
+s += 'setreading {0} UE_KE_TempIst {1}\n'.format("KWB_Uebersicht",UE_KE_TempIst) 
+s += 'setreading {0} UE_KE_RuecklaufTempIst {1}\n'.format("KWB_Uebersicht",UE_KE_RuecklaufTempIst) 
+s += 'setreading {0} UE_HK_RaumTempIst {1}\n'.format("KWB_Uebersicht",UE_HK_RaumTempIst) 
+s += 'setreading {0} UE_HK_VorlaufTempIst {1}\n'.format("KWB_Uebersicht",UE_HK_VorlaufTempIst) 
+s += 'setreading {0} UE_BW_TempIst {1}\n'.format("KWB_Uebersicht",UE_BW_TempIst)
+s += 'setreading {0} UE_PU_TempOben {1}\n'.format("KWB_Uebersicht",UE_PU_TempOben)
+s += 'setreading {0} UE_PU_TempUnten {1}\n'.format("KWB_Uebersicht",UE_PU_TempUnten)
+
+# Kessel
+s += 'setreading {0} KE_KesselEinAus {1}\n'.format("KWB_Kessel",KE_KesselEinAus)
+s += 'setreading {0} KE_Status {1}\n'.format("KWB_Kessel",KE_Status)
+s += 'setreading {0} KE_Leistung {1}\n'.format("KWB_Kessel",KE_Leistung)
+s += 'setreading {0} KE_TempIst {1}\n'.format("KWB_Kessel",KE_TempIst)
+s += 'setreading {0} KE_TempSoll {1}\n'.format("KWB_Kessel",KE_TempSoll)
+s += 'setreading {0} KE_Pumpe {1}\n'.format("KWB_Kessel",KE_Pumpe)
+s += 'setreading {0} KE_RuecklaufTempIst {1}\n'.format("KWB_Kessel",KE_RuecklaufTempIst)
+s += 'setreading {0} KE_RuecklaufTempSoll {1}\n'.format("KWB_Kessel",KE_RuecklaufTempSoll)
+s += 'setreading {0} KE_Volllaststunden {1}\n'.format("KWB_Kessel",KE_Volllaststunden)
+s += 'setreading {0} KE_Nennleistung {1}\n'.format("KWB_Kessel",KE_Nennleistung)
+s += 'setreading {0} KE_RLAMischer {1}\n'.format("KWB_Kessel",KE_RLAMischer)
+s += 'setreading {0} KE_Foedersystem {1}\n'.format("KWB_Kessel",KE_Foedersystem)
+s += 'setreading {0} KE_AussenTemp {1}\n'.format("KWB_Kessel",KE_AussenTemp)
+
+# Sauganlage
+s += 'setreading {0} SA_BeforzugteZeit1 {1}\n'.format("KWB_Sauganlage",SA_BeforzugteZeit1)
+s += 'setreading {0} SA_BeforzugteZeit2 {1}\n'.format("KWB_Sauganlage",SA_BeforzugteZeit2)
+s += 'setreading {0} SA_TUBBrennstoff {1}\n'.format("KWB_Sauganlage",SA_TUBBrennstoff)
+s += 'setreading {0} SA_Saugturbine {1}\n'.format("KWB_Sauganlage",SA_Saugturbine)
+s += 'setreading {0} SA_Status {1}\n'.format("KWB_Sauganlage",SA_Status)
+s += 'setreading {0} SA_Fuellstand {1}\n'.format("KWB_Sauganlage",SA_Fuellstand)
+s += 'setreading {0} SA_HaendischFuellen {1}\n'.format("KWB_Sauganlage",SA_HaendischFuellen)
+
+# Heizkreis
+s += 'setreading {0} HK_Status {1}\n'.format("KWB_Heizkeis",HK_Status)
+s += 'setreading {0} HK_Statusursache {1}\n'.format("KWB_Heizkeis",HK_Statusursache)
+s += 'setreading {0} HK_RaumTempIst {1}\n'.format("KWB_Heizkeis",HK_RaumTempIst)
+s += 'setreading {0} HK_RaumTempSoll {1}\n'.format("KWB_Heizkeis",HK_RaumTempSoll)
+s += 'setreading {0} HK_AussenTemp {1}\n'.format("KWB_Heizkeis",HK_AussenTemp)
+s += 'setreading {0} HK_VorlaufTempIst {1}\n'.format("KWB_Heizkeis",HK_VorlaufTempIst)
+s += 'setreading {0} HK_Pumpe {1}\n'.format("KWB_Heizkeis",HK_Pumpe)
+s += 'setreading {0} HK_Mischer {1}\n'.format("KWB_Heizkeis",HK_Mischer)
+s += 'setreading {0} HK_Program {1}\n'.format("KWB_Heizkeis",HK_Program)
+s += 'setreading {0} HK_AbsenkTemp {1}\n'.format("KWB_Heizkeis",HK_AbsenkTemp)
+s += 'setreading {0} HK_KomfortTemp {1}\n'.format("KWB_Heizkeis",HK_KomfortTemp)
+s += 'setreading {0} HK_UrlaubsFunktion {1}\n'.format("KWB_Heizkeis",HK_UrlaubsFunktion)
+s += 'setreading {0} HK_UrlaubsTemp {1}\n'.format("KWB_Heizkeis",HK_UrlaubsTemp)
+s += 'setreading {0} HK_UrlaubsBeginn {1}\n'.format("KWB_Heizkeis",HK_UrlaubsBeginn)
+s += 'setreading {0} HK_UrlaubsEnde {1}\n'.format("KWB_Heizkeis",HK_UrlaubsEnde)
+s += 'setreading {0} HK_PartyBetrieb {1}\n'.format("KWB_Heizkeis",HK_PartyBetrieb)
+s += 'setreading {0} HK_PartyDurchheizenBis {1}\n'.format("KWB_Heizkeis",HK_PartyDurchheizenBis)
+s += 'setreading {0} HK_AussenTempAbschaltung {1}\n'.format("KWB_Heizkeis",HK_AussenTempAbschaltung)
+s += 'setreading {0} HK_AussenTempAbschaltKomfort {1}\n'.format("KWB_Heizkeis",HK_AussenTempAbschaltKomfort)
+s += 'setreading {0} HK_AussenTempAbschaltAbsenk {1}\n'.format("KWB_Heizkeis",HK_AussenTempAbschaltAbsenk)
+s += 'setreading {0} HK_Raumeinfluss {1}\n'.format("KWB_Heizkeis",HK_Raumeinfluss)
+s += 'setreading {0} HK_Steigung {1}\n'.format("KWB_Sauganlage",HK_Steigung)
+s += 'setreading {0} HK_Offset {1}\n'.format("KWB_Heizkeis",HK_Offset)
+s += 'setreading {0} HK_Ecobetrieb {1}\n'.format("KWB_Heizkeis",HK_Ecobetrieb)
+
+# Brauchwasser
+s += 'setreading {0} BW_Status {1}\n'.format("KWB_Brauchwasser",BW_Status)
+s += 'setreading {0} BW_TempIst {1}\n'.format("KWB_Brauchwasser",BW_TempIst)
+s += 'setreading {0} BW_TempSoll {1}\n'.format("KWB_Brauchwasser",BW_TempSoll)
+s += 'setreading {0} BW_Ladepumpe {1}\n'.format("KWB_Brauchwasser",BW_Ladepumpe)
+s += 'setreading {0} BW_Anforderung {1}\n'.format("KWB_Brauchwasser",BW_Anforderung)
+s += 'setreading {0} BW_Programm {1}\n'.format("KWB_Brauchwasser",BW_Programm)
+s += 'setreading {0} BW_EinmalErhitzen {1}\n'.format("KWB_Brauchwasser",BW_EinmalErhitzen)
+s += 'setreading {0} BW_TempMin {1}\n'.format("KWB_Brauchwasser",BW_TempMin)
+s += 'setreading {0} BW_TempMax {1}\n'.format("KWB_Brauchwasser",BW_TempMax)
+s += 'setreading {0} BW_UrlaubsFunktion {1}\n'.format("KWB_Brauchwasser",BW_UrlaubsFunktion)
+s += 'setreading {0} BW_UrlaubsTemp {1}\n'.format("KWB_Brauchwasser",BW_UrlaubsTemp)
+s += 'setreading {0} BW_UrlaubsBeginn {1}\n'.format("KWB_Brauchwasser",BW_UrlaubsBeginn)
+s += 'setreading {0} BW_UrlaubsEnde {1}\n'.format("KWB_Brauchwasser",HK_Raumeinfluss)
+s += 'setreading {0} BW_LegioSchutzWochentag {1}\n'.format("KWB_Brauchwasser",BW_LegioSchutzWochentag)
+s += 'setreading {0} BW_LegioSchutzTemp {1}\n'.format("KWB_Brauchwasser",BW_LegioSchutzTemp)
+
+# Puffer
+s += 'setreading {0} PU_Status {1}\n'.format("KWB_Puffer",PU_Status)
+s += 'setreading {0} PU_TempOben {1}\n'.format("KWB_Puffer",PU_TempOben)
+s += 'setreading {0} PU_TempUnten {1}\n'.format("KWB_Puffer",PU_TempUnten)
+s += 'setreading {0} PU_TempSoll {1}\n'.format("KWB_Puffer",PU_TempSoll)
+s += 'setreading {0} PU_Anforderung {1}\n'.format("KWB_Puffer",PU_Anforderung)
+s += 'setreading {0} PU_Pumpe {1}\n'.format("KWB_Puffer",PU_Pumpe)
+s += 'setreading {0} PU_PumpeInfo {1}\n'.format("KWB_Puffer",PU_PumpeInfo)
+s += 'setreading {0} PU_BrauchwasserTempMin {1}\n'.format("KWB_Puffer",PU_BrauchwasserTempMin)
+s += 'setreading {0} PU_TempMin {1}\n'.format("KWB_Puffer",PU_TempMin)
+s += 'setreading {0} PU_TempMax {1}\n'.format("KWB_Puffer",PU_TempMax)
+s += 'setreading {0} PU_Umschaltventil {1}\n'.format("KWB_Puffer",PU_Umschaltventil)
+s += 'setreading {0} PU_UmschaltTemp {1}\n'.format("KWB_Puffer",PU_UmschaltTemp)
+s += 'setreading {0} PU_Programm {1}\n'.format("KWB_Puffer",PU_Programm)
+s += 'setreading {0} PU_LegioSchutzWochentag {1}\n'.format("KWB_Puffer",PU_LegioSchutzWochentag)
+s += 'setreading {0} PU_LegioSchutzTemp {1}\n'.format("KWB_Puffer",PU_LegioSchutzTemp)
+
+# Zubringerpumpe
+s += 'setreading {0} ZU_TempSoll {1}\n'.format("KWB_Zubringerpumpe",ZU_TempSoll)
+s += 'setreading {0} ZU_Anforderung {1}\n'.format("KWB_Zubringerpumpe",ZU_Anforderung)
+s += 'setreading {0} ZU_Pumpe {1}\n'.format("KWB_Zubringerpumpe",ZU_Pumpe)
+
+# Zirkulation
+s += 'setreading {0} ZI_Pumpe {1}\n'.format("KWB_Zirkulation",ZI_Pumpe)
+s += 'setreading {0} ZI_Taster {1}\n'.format("KWB_Zirkulation",ZI_Taster)
+s += 'setreading {0} ZI_Temp {1}\n'.format("KWB_Zirkulation",ZI_Temp)
+s += 'setreading {0} ZI_Program {1}\n'.format("KWB_Zirkulation",ZI_Program)
+
+# Allgemein
+s += 'setreading {0} AG_Kesselname {1}\n'.format("KWB_Allgemein",AG_Kesselname)
+s += 'setreading {0} AG_Kesseltyp {1}\n'.format("KWB_Allgemein",AG_Kesseltyp)
+s += 'setreading {0} AG_Seriennummer {1}\n'.format("KWB_Allgemein",AG_Seriennummer)
+s += 'setreading {0} AG_Serienstand {1}\n'.format("KWB_Allgemein",AG_Serienstand)
+s += 'setreading {0} AG_WartungAnzahl {1}\n'.format("KWB_Allgemein",AG_WartungAnzahl)
+s += 'setreading {0} AG_LetzteWartung {1}\n'.format("KWB_Allgemein",AG_LetzteWartung)
+s += 'setreading {0} AG_WartungIntervall {1}\n'.format("KWB_Allgemein",AG_WartungIntervall)
+s += 'setreading {0} AG_NaechsteWartung {1}\n'.format("KWB_Allgemein",AG_NaechsteWartung)
+s += 'setreading {0} AG_KontrolleAnzahl {1}\n'.format("KWB_Allgemein",AG_KontrolleAnzahl)
+s += 'setreading {0} AG_KontrolleIntervall {1}\n'.format("KWB_Allgemein",AG_KontrolleIntervall)
+s += 'setreading {0} AG_KontrolleRestdauer {1}\n'.format("KWB_Allgemein",AG_KontrolleRestdauer)
+s += 'setreading {0} AG_MailSenden {1}\n'.format("KWB_Allgemein",AG_MailSenden)
+s += 'setreading {0} AG_EMail {1}\n'.format("KWB_Allgemein",AG_EMail)
+s += 'setreading {0} AG_Zeitabstand {1}\n'.format("KWB_Allgemein",AG_Zeitabstand)
+
+# Aktive Alarme
+s += 'setreading {0} AL_AktivList {1}\n'.format("KWB_Alarme",AL_AktivList)
+
 
 s += "quit"
 
 netcat(host, port, s)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

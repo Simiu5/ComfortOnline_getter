@@ -1,6 +1,0 @@
-# 
-
-SHELL=/bin/sh
-
-# m h dom mon dow user	command
-*/5 *	* * *	root    /opt/fhem/scripts/co2fhem.py
