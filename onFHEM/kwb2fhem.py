@@ -1,9 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
 import requests
 from lxml import html
 import socket
+import sys
+
+reload(sys)
+sys.setdefaultencoding("UTF-8")
 
 
 # Connection to FHEM
@@ -52,7 +57,7 @@ session_requests = requests.session()
 
 # Get login token
 result = session_requests.get(URL_LOGIN)
-tree = html.fromstring(result.text)
+tree = html.fromstring(result.text.decode('UTF-8'))
 authenticity_token = list(set(tree.xpath("//input[@name='__RequestVerificationToken']/@value")))
 
 
@@ -106,7 +111,7 @@ valList.append(UE_PU_TempUnten)
 
 # Kessel-Elemente KE_
 result = session_requests.get(URL_KESSEL, headers = dict(referer = URL_KESSEL))
-tree = html.fromstring(result.content.decode('UTF-8'))
+tree = html.fromstring(result.content)
 
 nameList.append("KE_Name")
 valList.append("Kessel")
@@ -133,6 +138,8 @@ valList.append(KE_TempSoll)
 
 nameList.append("KE_Pumpe")
 KE_Pumpe = tree.get_element_by_id("val_000_00608").text
+if KE_Pumpe == 'Ein' or KE_Pumpe == 'On': KE_Pumpe = 1
+else: KE_Pumpe = 0
 valList.append(KE_Pumpe)
 
 nameList.append("KE_RuecklaufTempIst [°C]")
@@ -153,6 +160,8 @@ valList.append(KE_Nennleistung)
 
 nameList.append("KE_RLAMischer")
 KE_RLAMischer = tree.get_element_by_id("val_000_00622").text
+if KE_RLAMischer == 'Ein' or KE_RLAMischer == 'On': KE_RLAMischer = 1
+else: KE_RLAMischer = 0
 valList.append(KE_RLAMischer)
 
 nameList.append("KE_Foedersystem")
@@ -181,10 +190,14 @@ valList.append(SA_BeforzugteZeit2)
 
 nameList.append("SA_TUBBrennstoff")
 SA_TUBBrennstoff = tree.get_element_by_id("val_000_00605").text
+if SA_TUBBrennstoff == 'Ein' or SA_TUBBrennstoff == 'On': SA_TUBBrennstoff = 1
+else: SA_TUBBrennstoff = 0
 valList.append(SA_TUBBrennstoff)
 
 nameList.append("SA_Saugturbine")
 SA_Saugturbine = tree.get_element_by_id("val_000_00637").text
+if SA_Saugturbine == 'Ein' or SA_Saugturbine == 'On': SA_Saugturbine = 1
+else: SA_Saugturbine = 0
 valList.append(SA_Saugturbine)
 
 nameList.append("SA_Status")
@@ -193,6 +206,8 @@ valList.append(SA_Status)
 
 nameList.append("SA_Fuellstand")
 SA_Fuellstand	= tree.get_element_by_id("val_000_00660").text
+if SA_Fuellstand == 'Ein' or SA_Fuellstand == 'On': SA_Fuellstand = 1
+else: SA_Fuellstand = 0
 valList.append(SA_Fuellstand)
 
 nameList.append("SA_HaendischFuellen [0=Aus|1=Ein]")
@@ -255,10 +270,14 @@ valList.append(HK_VorlaufTempIst)
 
 nameList.append("HK_Pumpe")
 HK_Pumpe = tree.get_element_by_id("val_002_00340").text
+if HK_Pumpe == 'Ein' or HK_Pumpe == 'On': HK_Pumpe = 1
+else: HK_Pumpe = 0
 valList.append(HK_Pumpe)
 
 nameList.append("HK_Mischer")
 HK_Mischer = tree.get_element_by_id("val_002_00338").text
+if HK_Mischer == 'Ein' or HK_Mischer == 'On': HK_Mischer = 1
+else: HK_Mischer = 0
 valList.append(HK_Mischer)
 
 nameList.append("HK_Program")
@@ -389,6 +408,8 @@ valList.append(BW_TempSoll)
 
 nameList.append("BW_Ladepumpe")
 BW_Ladepumpe = tree.get_element_by_id("val_001_00491").text
+if BW_Ladepumpe == 'Ein' or BW_Ladepumpe == 'On': BW_Ladepumpe = 1
+else: BW_Ladepumpe = 0
 valList.append(BW_Ladepumpe)
 
 nameList.append("BW_Anforderung")
@@ -507,6 +528,8 @@ valList.append(PU_Anforderung)
 
 nameList.append("PU_Pumpe")
 PU_Pumpe = tree.get_element_by_id("val_000_00450").text
+if PU_Pumpe == 'Ein' or PU_Pumpe == 'On': PU_Pumpe = 1
+else: PU_Pumpe = 0
 valList.append(PU_Pumpe)
 
 nameList.append("PU_PumpeInfo")
@@ -609,6 +632,8 @@ valList.append(ZU_Anforderung)
 
 nameList.append("ZU_Pumpe")
 ZU_Pumpe = tree.get_element_by_id("val_001_00450").text
+if ZU_Pumpe == 'Ein' or ZU_Pumpe == 'On': ZU_Pumpe = 1
+else: ZU_Pumpe = 0
 valList.append(ZU_Pumpe)
 
 
@@ -621,6 +646,8 @@ valList.append("Zirkulation")
 
 nameList.append("ZI_Pumpe")
 ZI_Pumpe = tree.get_element_by_id("val_001_00904").text
+if ZI_Pumpe == 'Ein' or ZI_Pumpe == 'On': ZI_Pumpe = 1
+else: ZI_Pumpe = 0
 valList.append(ZI_Pumpe)
 
 nameList.append("ZI_Taster")
@@ -775,7 +802,7 @@ def netcat(hostname, port, content):
         if data == "":
             break
     if data:
-        print "Received:", repr(data)
+        print("Received:", repr(data))
     s.close()
 
 
@@ -906,7 +933,7 @@ s += 'setreading {0} AG_Zeitabstand {1}\n'.format("KWB_Allgemein",AG_Zeitabstand
 
 # Aktive Alarme
 s += 'setreading {0} AL_AktivList {1}\n'.format("KWB_Alarme",AL_AktivList)
-
+# s += 'setreading {0} AL_AlleList {1}\n'.format("KWB_Alarme",AL_AlleList)
 
 s += "quit"
 
